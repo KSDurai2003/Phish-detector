@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silent Guard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 360px;
+      min-height: 520px;
+      background: linear-gradient(160deg, #0d0d1a 0%, #111827 60%, #0f172a 100%);
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #1e2035 0%, #161b2e 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      padding: 16px 18px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-icon { font-size: 32px; line-height: 1; }
+    .header-text h1 {
+      font-size: 16px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.3px;
+    }
+    .header-text p { font-size: 10.5px; color: #64748b; margin-top: 1px; }
+
+    /* ── API Status ── */
+    #api-status {
+      margin: 12px 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    #api-status.ok     { background: rgba(52,199,89,0.12);  border: 1px solid rgba(52,199,89,0.3);  color: #34c759; }
+    #api-status.error  { background: rgba(255,59,48,0.12);  border: 1px solid rgba(255,59,48,0.3);  color: #ff3b30; }
+    #api-status.loading{ background: rgba(255,149,0,0.12);  border: 1px solid rgba(255,149,0,0.3);  color: #ff9500; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .status-dot.ok     { background: #34c759; box-shadow: 0 0 6px #34c759; }
+    .status-dot.error  { background: #ff3b30; box-shadow: 0 0 6px #ff3b30; }
+    .status-dot.loading{ background: #ff9500; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* ── Current page result ── */
+    #page-result {
+      margin: 14px 16px 0;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.03);
+    }
+    #page-result h3 { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; }
+    .result-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .result-url {
+      font-size: 11px; color: #94a3b8; word-break: break-all;
+      max-height: 36px; overflow: hidden; font-family: monospace;
+      flex: 1;
+    }
+    .result-badge {
+      flex-shrink: 0;
+      font-size: 11px; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px; white-space: nowrap;
+    }
+    .result-badge.phishing  { background: #FF3B30; color: #fff; }
+    .result-badge.legitimate{ background: #34c759; color: #fff; }
+    .result-badge.scanning  { background: #FF9500; color: #fff; }
+    .result-badge.unknown   { background: #3b4252; color: #94a3b8; }
+    .conf-bar-wrap { margin-top: 10px; }
+    .conf-bar-label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+    .conf-bar { height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+    .conf-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+    .conf-bar-fill.phishing  { background: linear-gradient(90deg,#FF3B30,#FF6B6B); }
+    .conf-bar-fill.legitimate{ background: linear-gradient(90deg,#34c759,#5de068); }
+
+    /* ── Manual scan ── */
+    .section { margin: 14px 16px 0; }
+    .section h3 { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+
+    .input-group { display: flex; gap: 6px; }
+    #manual-url {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #e2e8f0;
+      font-size: 12px;
+      font-family: monospace;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    #manual-url:focus { border-color: rgba(96,165,250,0.5); }
+    #manual-url::placeholder { color: #4b5563; }
+    #btn-scan {
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    #btn-scan:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.4); }
+    #btn-scan:active { transform: translateY(0); }
+
+    #manual-result {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      display: none;
+    }
+    #manual-result.phishing  { background: rgba(255,59,48,0.12); border: 1px solid rgba(255,59,48,0.3); color: #ff8a80; }
+    #manual-result.legitimate{ background: rgba(52,199,89,0.12); border: 1px solid rgba(52,199,89,0.3); color: #a3f0b5; }
+    #manual-result.error     { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; }
+
+    /* ── Page links list ── */
+    #links-list {
+      margin: 14px 16px 0;
+      max-height: 160px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+    #links-list::-webkit-scrollbar { width: 4px; }
+    #links-list::-webkit-scrollbar-track { background: transparent; }
+    #links-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .link-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .link-item:last-child { border-bottom: none; }
+    .link-item-url { flex: 1; font-size: 11px; color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
+    .link-item-badge {
+      flex-shrink: 0; font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 20px;
+    }
+    .link-item-badge.phishing   { background: rgba(255,59,48,0.85);  color: #fff; }
+    .link-item-badge.legitimate { background: rgba(52,199,89,0.25);  color: #34c759; }
+    .link-item-badge.scanning   { background: rgba(255,149,0,0.25);  color: #ff9500; }
+
+    /* ── Scan page button ── */
+    #btn-scan-page {
+      display: block;
+      width: calc(100% - 32px);
+      margin: 14px 16px;
+      background: linear-gradient(135deg,#1e293b,#0f172a);
+      border: 1px solid rgba(99,102,241,0.4);
+      color: #a5b4fc;
+      border-radius: 10px;
+      padding: 11px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    #btn-scan-page:hover { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.7); }
+
+    /* ── Empty state ── */
+    .empty-state { text-align: center; padding: 20px 0; color: #4b5563; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-icon">🛡️</div>
+    <div class="header-text">
+      <h1>Silent Guard</h1>
+      <p>Homograph Phishing Detector</p>
+    </div>
+  </div>
+
+  <!-- API Status -->
+  <div id="api-status" class="loading">
+    <div class="status-dot loading"></div>
+    <span id="api-status-text">Connecting to AI backend…</span>
+  </div>
+
+  <!-- Current page URL result -->
+  <div id="page-result">
+    <h3>Current Page</h3>
+    <div class="result-row">
+      <div class="result-url" id="current-url">—</div>
+      <div class="result-badge unknown" id="current-badge">Checking…</div>
+    </div>
+    <div class="conf-bar-wrap" id="conf-wrap" style="display:none">
+      <div class="conf-bar-label" id="conf-label"></div>
+      <div class="conf-bar"><div class="conf-bar-fill" id="conf-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- Manual URL input -->
+  <div class="section">
+    <h3>Scan Any URL</h3>
+    <div class="input-group">
+      <input type="text" id="manual-url" placeholder="https://example.com" />
+      <button id="btn-scan">Scan</button>
+    </div>
+    <div id="manual-result"></div>
+  </div>
+
+  <!-- Page links section -->
+  <div class="section">
+    <h3>Page Links <span id="link-count" style="color:#4b5563;font-weight:400"></span></h3>
+  </div>
+  <div id="links-list">
+    <div class="empty-state">Scanning page links…</div>
+  </div>
+
+  <button id="btn-scan-page">🔄 Re-Scan All Page Links</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

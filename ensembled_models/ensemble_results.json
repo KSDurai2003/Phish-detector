@@ -1,0 +1,86 @@
+{
+  "Logistic Regression": {
+    "Accuracy": 0.9038,
+    "F1": 0.8485,
+    "Precision": 0.8505,
+    "Recall": 0.8465
+  },
+  "Decision Tree": {
+    "Accuracy": 0.9665,
+    "F1": 0.9484,
+    "Precision": 0.9301,
+    "Recall": 0.9675
+  },
+  "KNN": {
+    "Accuracy": 0.9527,
+    "F1": 0.924,
+    "Precision": 0.9468,
+    "Recall": 0.9022
+  },
+  "Naive Bayes": {
+    "Accuracy": 0.8743,
+    "F1": 0.798,
+    "Precision": 0.8169,
+    "Recall": 0.78
+  },
+  "LDA": {
+    "Accuracy": 0.9019,
+    "F1": 0.8459,
+    "Precision": 0.8463,
+    "Recall": 0.8456
+  },
+  "AdaBoost": {
+    "Accuracy": 0.9103,
+    "F1": 0.8522,
+    "Precision": 0.896,
+    "Recall": 0.8124
+  },
+  "Bagging": {
+    "Accuracy": 0.9704,
+    "F1": 0.9541,
+    "Precision": 0.9416,
+    "Recall": 0.967
+  },
+  "Random Forest": {
+    "Accuracy": 0.97,
+    "F1": 0.9533,
+    "Precision": 0.9449,
+    "Recall": 0.9619
+  },
+  "XGBoost": {
+    "Accuracy": 0.9709,
+    "F1": 0.9541,
+    "Precision": 0.9588,
+    "Recall": 0.9495
+  },
+  "LightGBM": {
+    "Accuracy": 0.974,
+    "F1": 0.959,
+    "Precision": 0.9609,
+    "Recall": 0.9571
+  },
+  "CatBoost": {
+    "Accuracy": 0.9562,
+    "F1": 0.9299,
+    "Precision": 0.9483,
+    "Recall": 0.9122
+  },
+  "SVM": {
+    "Accuracy": 0.9412,
+    "F1": 0.906,
+    "Precision": 0.9226,
+    "Recall": 0.89
+  },
+  "Neural Network (MLP)": {
+    "Accuracy": 0.9749,
+    "F1": 0.9603,
+    "Precision": 0.9656,
+    "Recall": 0.955
+  },
+  "LCCDE": {
+    "Accuracy": 0.9362,
+    "F1": 0.8972,
+    "Precision": 0.9207,
+    "Recall": 0.8749
+  }
+}

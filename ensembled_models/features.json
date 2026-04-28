@@ -1,0 +1,14 @@
+[
+  "url_length",
+  "domain_length",
+  "char_entropy",
+  "digit_fraction",
+  "special_char_fraction",
+  "unicode_fraction",
+  "subdomain_depth",
+  "has_punycode",
+  "unicode_script_count",
+  "mixed_script",
+  "vowel_consonant_ratio",
+  "max_consec_consonants"
+]

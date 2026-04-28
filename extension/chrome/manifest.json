@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Silent Guard — Phishing URL Detector",
+  "version": "1.0.0",
+  "description": "Detects homograph phishing URLs on every page and in your address bar using a locally-trained AI model.",
+  "icons": {
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "notifications",
+    "storage",
+    "alarms"
+  ],
+
+  "host_permissions": [
+    "http://127.0.0.1:5000/*",
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js":      ["content.js"],
+      "run_at":  "document_idle"
+    }
+  ],
+
+  "action": {
+    "default_popup":  "popup.html",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Silent Guard — Phishing Detector"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches":   ["<all_urls>"]
+    }
+  ]
+}
